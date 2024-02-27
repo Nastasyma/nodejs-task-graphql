@@ -16,6 +16,9 @@ Constraints and logic for gql queries should be done based on restful implementa
    To determine if a user is a sub you need to do the appropriate join ([include](https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#include)).  
    But only do a join when you need it. You can use [graphql-parse-resolve-info](https://github.com/graphile/graphile-engine/tree/master/packages/graphql-parse-resolve-info) package to parse GraphQLResolveInfo to determine if subs are expected in the response.  
 
+### Score: 
+[Task Score](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/graphql-service/score.md)
+
 ### Info:  
 It is forbidden to add new npm dependencies.  
 You should only modify/add the code inside the folder ./src/routes/graphql.  
