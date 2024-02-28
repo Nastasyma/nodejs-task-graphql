@@ -20,6 +20,7 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
         schema,
         source: query,
         variableValues: variables,
+        contextValue: { prisma: fastify.prisma },
       });
     },
   });
