@@ -1,9 +1,9 @@
 import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { UUIDType } from './uuid.js';
 import { UserType } from './userType.js';
-import { IContext } from './interfaces.js';
+import { IContext, IPost } from './interfaces.js';
 
-export const PostType = new GraphQLObjectType({
+export const PostType: GraphQLObjectType<IPost, IContext> = new GraphQLObjectType({
   name: 'Post',
   fields: () => ({
     id: { type: new GraphQLNonNull(UUIDType) },

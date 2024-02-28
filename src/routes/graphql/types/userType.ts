@@ -7,10 +7,10 @@ import {
 } from 'graphql';
 import { UUIDType } from './uuid.js';
 import { PostType } from './postType.js';
-import { IContext } from './interfaces.js';
+import { IContext, IUser } from './interfaces.js';
 import { ProfileType } from './profileType.js';
 
-export const UserType: GraphQLObjectType<{ id: string }, IContext> =
+export const UserType: GraphQLObjectType<IUser, IContext> =
   new GraphQLObjectType({
     name: 'User',
     fields: () => ({
@@ -20,22 +20,22 @@ export const UserType: GraphQLObjectType<{ id: string }, IContext> =
 
       posts: {
         type: new GraphQLList(PostType),
-        resolve: async (source: { id: string }, _args: unknown, context: IContext) =>
+        resolve: async (source, _args: unknown, context: IContext) =>
           await context.prisma.post.findMany({ where: { authorId: source.id } }),
       },
 
       profile: {
         type: ProfileType,
-        resolve: async (source: { id: string }, _args: unknown, context: IContext) =>
+        resolve: async (source, _args: unknown, context: IContext) =>
           await context.prisma.profile.findUnique({ where: { userId: source.id } }),
       },
 
       userSubscribedTo: {
         type: new GraphQLList(UserType),
-        resolve: async (parent, _args, context) =>
+        resolve: async (source, _args, context) =>
           (
             await context.prisma.subscribersOnAuthors.findMany({
-              where: { subscriberId: parent.id },
+              where: { subscriberId: source.id },
               select: { author: true },
             })
           ).map(({ author }) => author),
@@ -43,7 +43,7 @@ export const UserType: GraphQLObjectType<{ id: string }, IContext> =
 
       subscribedToUser: {
         type: new GraphQLList(UserType),
-        resolve: async (source: { id: string }, _args: unknown, context: IContext) =>
+        resolve: async (source, _args: unknown, context: IContext) =>
           (
             await context.prisma.subscribersOnAuthors.findMany({
               where: { authorId: source.id },

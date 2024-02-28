@@ -7,9 +7,9 @@ import {
   GraphQLObjectType,
 } from 'graphql';
 import { ProfileType } from './profileType.js';
-import { IContext } from './interfaces.js';
+import { IContext, IMemberType } from './interfaces.js';
 
-export const MemberType = new GraphQLObjectType({
+export const MemberType: GraphQLObjectType<IMemberType, IContext> = new GraphQLObjectType({
   name: 'MemberType',
   fields: () => ({
     id: { type: new GraphQLNonNull(MemberTypeId) },
@@ -18,7 +18,7 @@ export const MemberType = new GraphQLObjectType({
 
     profiles: {
       type: new GraphQLList(ProfileType),
-      resolve: async (source: { id: string }, _args: unknown, context: IContext) =>
+      resolve: async (source, _args: unknown, context: IContext) =>
         await context.prisma.profile.findMany({ where: { memberTypeId: source.id } }),
     }
   }),
