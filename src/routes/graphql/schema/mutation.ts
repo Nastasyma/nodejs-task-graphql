@@ -2,6 +2,7 @@ import { GraphQLBoolean, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { IContext } from '../types/interfaces.js';
 import { ChangeUserInputType, CreateUserInputType, UserType } from '../types/userType.js';
 import { UUIDType } from '../types/uuid.js';
+import { ChangePostInputType, CreatePostInputType, PostType } from '../types/postType.js';
 
 export const mutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -76,6 +77,43 @@ export const mutation = new GraphQLObjectType({
             subscriberId_authorId: { subscriberId: args.userId, authorId: args.authorId },
           },
         })),
+    },
+
+    createPost: {
+      type: PostType,
+      args: { dto: { type: new GraphQLNonNull(CreatePostInputType) } },
+      resolve: async (
+        _source: unknown,
+        args: { dto: { title: string; content: string; authorId: string } },
+        context: IContext,
+      ) =>
+        await context.prisma.post.create({
+          data: args.dto,
+        }),
+    },
+
+    changePost: {
+      type: PostType,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+        dto: { type: new GraphQLNonNull(ChangePostInputType) },
+      },
+      resolve: async (
+        _source: unknown,
+        args: { id: string; dto: { title: string; content: string } },
+        context: IContext,
+      ) =>
+        await context.prisma.post.update({
+          where: { id: args.id },
+          data: args.dto,
+        }),
+    },
+
+    deletePost: {
+      type: GraphQLBoolean,
+      args: { id: { type: new GraphQLNonNull(UUIDType) } },
+      resolve: async (_source: unknown, args: { id: string }, context: IContext) =>
+        !!(await context.prisma.post.delete({ where: { id: args.id } })),
     },
   }),
 });

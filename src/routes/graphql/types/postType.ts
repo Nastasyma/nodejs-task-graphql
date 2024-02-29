@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLInputObjectType, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { UUIDType } from './uuid.js';
 import { UserType } from './userType.js';
 import { IContext, IPost } from './interfaces.js';
@@ -15,5 +15,21 @@ export const PostType: GraphQLObjectType<IPost, IContext> = new GraphQLObjectTyp
         await context.prisma.user.findUnique({ where: { id: source.authorId } }),
     },
     authorId: { type: new GraphQLNonNull(UUIDType) },
+  }),
+});
+
+export const CreatePostInputType = new GraphQLInputObjectType({
+  name: 'CreatePostInput',
+  fields: () => ({
+    title: { type: new GraphQLNonNull(GraphQLString) },
+    content: { type: new GraphQLNonNull(GraphQLString) },
+  }),
+});
+
+export const ChangePostInputType = new GraphQLInputObjectType({
+  name: 'ChangePostInput',
+  fields: () => ({
+    title: { type: GraphQLString },
+    content: { type: GraphQLString },
   }),
 });
