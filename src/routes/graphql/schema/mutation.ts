@@ -1,8 +1,15 @@
 import { GraphQLBoolean, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { IContext } from '../types/interfaces.js';
-import { ChangeUserInputType, CreateUserInputType, UserType } from '../types/userType.js';
+import { UserType } from '../types/userType.js';
 import { UUIDType } from '../types/uuid.js';
 import { ChangePostInputType, CreatePostInputType, PostType } from '../types/postType.js';
+import { ProfileType } from '../types/profileType.js';
+import {
+  ChangeProfileInputType,
+  ChangeUserInputType,
+  CreateProfileInputType,
+  CreateUserInputType,
+} from '../types/inputTypes.js';
 
 export const mutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -114,6 +121,50 @@ export const mutation = new GraphQLObjectType({
       args: { id: { type: new GraphQLNonNull(UUIDType) } },
       resolve: async (_source: unknown, args: { id: string }, context: IContext) =>
         !!(await context.prisma.post.delete({ where: { id: args.id } })),
+    },
+
+    createProfile: {
+      type: ProfileType,
+      args: { dto: { type: new GraphQLNonNull(CreateProfileInputType) } },
+      resolve: async (
+        _source: unknown,
+        args: {
+          dto: {
+            userId: string;
+            memberTypeId: string;
+            isMale: boolean;
+            yearOfBirth: number;
+          };
+        },
+        context: IContext,
+      ) =>
+        await context.prisma.profile.create({
+          data: args.dto,
+        }),
+    },
+
+    changeProfile: {
+      type: ProfileType,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+        dto: { type: new GraphQLNonNull(ChangeProfileInputType) },
+      },
+      resolve: async (
+        _source: unknown,
+        args: { id: string; dto: { isMale: boolean; yearOfBirth: number } },
+        context: IContext,
+      ) =>
+        await context.prisma.profile.update({
+          where: { id: args.id },
+          data: args.dto,
+        }),
+    },
+
+    deleteProfile: {
+      type: GraphQLBoolean,
+      args: { id: { type: new GraphQLNonNull(UUIDType) } },
+      resolve: async (_source: unknown, args: { id: string }, context: IContext) =>
+        !!(await context.prisma.profile.delete({ where: { id: args.id } })),
     },
   }),
 });

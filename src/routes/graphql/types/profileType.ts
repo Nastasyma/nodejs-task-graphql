@@ -1,4 +1,9 @@
-import { GraphQLBoolean, GraphQLInt, GraphQLNonNull, GraphQLObjectType } from 'graphql';
+import {
+  GraphQLBoolean,
+  GraphQLInt,
+  GraphQLNonNull,
+  GraphQLObjectType,
+} from 'graphql';
 import { UUIDType } from './uuid.js';
 import { UserType } from './userType.js';
 import { IContext, IProfile } from './interfaces.js';
