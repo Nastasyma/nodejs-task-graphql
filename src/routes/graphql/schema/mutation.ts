@@ -19,7 +19,7 @@ export const mutation = new GraphQLObjectType({
         }),
     },
 
-    updateUser: {
+    changeUser: {
       type: UserType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
