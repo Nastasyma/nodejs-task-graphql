@@ -23,8 +23,20 @@ export const query = new GraphQLObjectType({
 
     users: {
       type: new GraphQLList(UserType),
-      resolve: async (_source: unknown, _args: unknown, context: IContext) =>
-        await context.prisma.user.findMany(),
+      resolve: async (_source: unknown, _args: unknown, context: IContext) =>{
+        const users = await context.prisma.user.findMany({
+          include: {
+            userSubscribedTo: true,
+            subscribedToUser: true,
+          },
+        });
+
+        users.forEach((user) => {
+          context.dataLoaders.userLoader.prime(user.id, user);
+        });
+
+        return users;
+      }
     },
 
     profiles: {
@@ -51,7 +63,7 @@ export const query = new GraphQLObjectType({
       type: UserType,
       args: { id: { type: new GraphQLNonNull(UUIDType) } },
       resolve: async (_source: unknown, args: { id: string }, context: IContext) =>
-        await context.prisma.user.findUnique({ where: { id: args.id } }),
+        await context.dataLoaders.userLoader.load(args.id),
     },
 
     profile: {
