@@ -1,10 +1,20 @@
-import { GraphQLList, GraphQLNonNull, GraphQLObjectType } from 'graphql';
+import {
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLResolveInfo,
+} from 'graphql';
 import { MemberType, MemberTypeId } from '../types/memberTypes.js';
-import { IContext } from '../types/interfaces.js';
+import { IContext, IUser } from '../types/interfaces.js';
 import { PostType } from '../types/postType.js';
 import { UserType } from '../types/userType.js';
 import { ProfileType } from '../types/profileType.js';
 import { UUIDType } from '../types/uuid.js';
+import {
+  parseResolveInfo,
+  ResolveTree,
+  simplifyParsedResolveInfoFragmentWithType,
+} from 'graphql-parse-resolve-info';
 
 export const query = new GraphQLObjectType({
   name: 'Query',
@@ -23,20 +33,43 @@ export const query = new GraphQLObjectType({
 
     users: {
       type: new GraphQLList(UserType),
-      resolve: async (_source: unknown, _args: unknown, context: IContext) =>{
-        const users = await context.prisma.user.findMany({
+      resolve: async (
+        _source: unknown,
+        _args: unknown,
+        context: IContext,
+        info: GraphQLResolveInfo,
+      ) => {
+        // const users = await context.prisma.user.findMany({
+        //   include: {
+        //     userSubscribedTo: true,
+        //     subscribedToUser: true,
+        //   },
+        // });
+        const parsedInfo = parseResolveInfo(info);
+
+        const {
+          fields,
+        }: {
+          fields: { userSubscribedTo?: ResolveTree; subscribedToUser?: ResolveTree };
+        } = simplifyParsedResolveInfoFragmentWithType(
+          parsedInfo as ResolveTree,
+          new GraphQLList(UserType),
+        );
+        // console.log('fields', fields);
+
+        const users: IUser[] = await context.prisma.user.findMany({
           include: {
-            userSubscribedTo: true,
-            subscribedToUser: true,
+            userSubscribedTo: !!fields.userSubscribedTo,
+            subscribedToUser: !!fields.subscribedToUser,
           },
         });
 
-        users.forEach((user) => {
+        for (const user of users) {
           context.dataLoaders.userLoader.prime(user.id, user);
-        });
+        }
 
         return users;
-      }
+      },
     },
 
     profiles: {
