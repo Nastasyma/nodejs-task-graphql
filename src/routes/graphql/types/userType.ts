@@ -31,24 +31,18 @@ export const UserType: GraphQLObjectType<IUser, IContext> = new GraphQLObjectTyp
 
     userSubscribedTo: {
       type: new GraphQLList(UserType),
-      resolve: async (source, _args, context) =>
-        (
-          await context.prisma.subscribersOnAuthors.findMany({
-            where: { subscriberId: source.id },
-            select: { author: true },
-          })
-        ).map(({ author }) => author),
+      resolve: async (source, _args: unknown, context: IContext) =>
+      source.userSubscribedTo && source.userSubscribedTo.length
+        ? context.dataLoaders.userLoader.loadMany(source.userSubscribedTo.map(({ authorId }) => authorId))
+        : null,
     },
 
     subscribedToUser: {
       type: new GraphQLList(UserType),
       resolve: async (source, _args: unknown, context: IContext) =>
-        (
-          await context.prisma.subscribersOnAuthors.findMany({
-            where: { authorId: source.id },
-            select: { subscriber: true },
-          })
-        ).map(({ subscriber }) => subscriber),
+      source.subscribedToUser && source.subscribedToUser.length
+        ? context.dataLoaders.userLoader.loadMany(source.subscribedToUser.map(({ subscriberId }) => subscriberId))
+        : null,
     },
   }),
 });

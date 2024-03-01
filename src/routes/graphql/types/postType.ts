@@ -12,7 +12,7 @@ export const PostType: GraphQLObjectType<IPost, IContext> = new GraphQLObjectTyp
     author: {
       type: new GraphQLNonNull(UserType),
       resolve: async (source: { authorId: string }, _args: unknown, context: IContext) =>
-        await context.prisma.user.findUnique({ where: { id: source.authorId } }),
+        await context.dataLoaders.userLoader.load(source.authorId),
     },
     authorId: { type: new GraphQLNonNull(UUIDType) },
   }),
