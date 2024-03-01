@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import { IProfile } from "../types/interfaces.js";
-import DataLoader from "dataloader";
+import { PrismaClient } from '@prisma/client';
+import DataLoader from 'dataloader';
+import { IProfile } from '../types/interfaces.js';
 
 export const profileLoader = (prisma: PrismaClient) => {
   return new DataLoader(async (ids: readonly string[]) => {
@@ -14,4 +14,4 @@ export const profileLoader = (prisma: PrismaClient) => {
 
     return ids.map((id) => profiles.find((profile) => profile.userId === id));
   });
-}
+};

@@ -1,9 +1,4 @@
 import { GraphQLBoolean, GraphQLNonNull, GraphQLObjectType } from 'graphql';
-import { IContext } from '../types/interfaces.js';
-import { UserType } from '../types/userType.js';
-import { UUIDType } from '../types/uuid.js';
-import { PostType } from '../types/postType.js';
-import { ProfileType } from '../types/profileType.js';
 import {
   ChangePostInputType,
   ChangeProfileInputType,
@@ -12,6 +7,11 @@ import {
   CreateProfileInputType,
   CreateUserInputType,
 } from '../types/inputTypes.js';
+import { IContext } from '../types/interfaces.js';
+import { PostType } from '../types/postType.js';
+import { ProfileType } from '../types/profileType.js';
+import { UserType } from '../types/userType.js';
+import { UUIDType } from '../types/uuid.js';
 
 export const mutation = new GraphQLObjectType({
   name: 'Mutation',

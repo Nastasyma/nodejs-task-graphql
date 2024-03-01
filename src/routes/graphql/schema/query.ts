@@ -4,17 +4,17 @@ import {
   GraphQLObjectType,
   GraphQLResolveInfo,
 } from 'graphql';
-import { MemberType, MemberTypeId } from '../types/memberTypes.js';
-import { IContext, IUser } from '../types/interfaces.js';
-import { PostType } from '../types/postType.js';
-import { UserType } from '../types/userType.js';
-import { ProfileType } from '../types/profileType.js';
-import { UUIDType } from '../types/uuid.js';
 import {
-  parseResolveInfo,
   ResolveTree,
+  parseResolveInfo,
   simplifyParsedResolveInfoFragmentWithType,
 } from 'graphql-parse-resolve-info';
+import { IContext, IUser } from '../types/interfaces.js';
+import { MemberType, MemberTypeId } from '../types/memberTypes.js';
+import { PostType } from '../types/postType.js';
+import { ProfileType } from '../types/profileType.js';
+import { UserType } from '../types/userType.js';
+import { UUIDType } from '../types/uuid.js';
 
 export const query = new GraphQLObjectType({
   name: 'Query',

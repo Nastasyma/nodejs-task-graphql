@@ -1,13 +1,8 @@
-import {
-  GraphQLBoolean,
-  GraphQLInt,
-  GraphQLNonNull,
-  GraphQLObjectType,
-} from 'graphql';
-import { UUIDType } from './uuid.js';
-import { UserType } from './userType.js';
+import { GraphQLBoolean, GraphQLInt, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { IContext, IProfile } from './interfaces.js';
 import { MemberType, MemberTypeId } from './memberTypes.js';
+import { UserType } from './userType.js';
+import { UUIDType } from './uuid.js';
 
 export const ProfileType: GraphQLObjectType<IProfile, IContext> = new GraphQLObjectType({
   name: 'Profile',
@@ -24,7 +19,7 @@ export const ProfileType: GraphQLObjectType<IProfile, IContext> = new GraphQLObj
     memberType: {
       type: MemberType,
       resolve: async (source, _args: unknown, context: IContext) =>
-      await context.dataLoaders.memberTypeLoader.load(source.memberTypeId),
+        await context.dataLoaders.memberTypeLoader.load(source.memberTypeId),
     },
     memberTypeId: { type: new GraphQLNonNull(MemberTypeId) },
   }),

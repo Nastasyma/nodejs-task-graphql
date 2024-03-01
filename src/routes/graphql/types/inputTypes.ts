@@ -6,8 +6,8 @@ import {
   GraphQLNonNull,
   GraphQLString,
 } from 'graphql';
-import { UUIDType } from './uuid.js';
 import { MemberTypeId } from './memberTypes.js';
+import { UUIDType } from './uuid.js';
 
 export const CreateUserInputType = new GraphQLInputObjectType({
   name: 'CreateUserInput',

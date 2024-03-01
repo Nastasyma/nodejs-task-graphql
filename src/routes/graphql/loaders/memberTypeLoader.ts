@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import DataLoader from "dataloader";
-import { IMemberType } from "../types/interfaces.js";
+import { PrismaClient } from '@prisma/client';
+import DataLoader from 'dataloader';
+import { IMemberType } from '../types/interfaces.js';
 
 export const memberTypeLoader = (prisma: PrismaClient) => {
   return new DataLoader(async (ids: readonly string[]) => {
@@ -14,4 +14,4 @@ export const memberTypeLoader = (prisma: PrismaClient) => {
 
     return ids.map((id) => memberTypes.find((memberType) => memberType.id === id));
   });
-}
+};

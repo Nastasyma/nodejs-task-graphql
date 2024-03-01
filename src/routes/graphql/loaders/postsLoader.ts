@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 import DataLoader from 'dataloader';
-import { IPost } from "../types/interfaces.js";
+import { IPost } from '../types/interfaces.js';
 
 export const postsLoader = (prisma: PrismaClient) => {
   return new DataLoader(async (ids: readonly string[]) => {
@@ -14,4 +14,4 @@ export const postsLoader = (prisma: PrismaClient) => {
 
     return ids.map((id) => posts.filter((post) => post.authorId === id));
   });
-}
+};

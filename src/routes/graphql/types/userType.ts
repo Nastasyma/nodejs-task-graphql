@@ -5,10 +5,10 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { UUIDType } from './uuid.js';
-import { PostType } from './postType.js';
 import { IContext, IUser } from './interfaces.js';
+import { PostType } from './postType.js';
 import { ProfileType } from './profileType.js';
+import { UUIDType } from './uuid.js';
 
 export const UserType: GraphQLObjectType<IUser, IContext> = new GraphQLObjectType({
   name: 'User',
@@ -32,17 +32,21 @@ export const UserType: GraphQLObjectType<IUser, IContext> = new GraphQLObjectTyp
     userSubscribedTo: {
       type: new GraphQLList(UserType),
       resolve: async (source, _args: unknown, context: IContext) =>
-      source.userSubscribedTo
-        ? context.dataLoaders.userLoader.loadMany(source.userSubscribedTo.map(({ authorId }) => authorId))
-        : null,
+        source.userSubscribedTo
+          ? context.dataLoaders.userLoader.loadMany(
+              source.userSubscribedTo.map((user) => user.authorId),
+            )
+          : null,
     },
 
     subscribedToUser: {
       type: new GraphQLList(UserType),
       resolve: async (source, _args: unknown, context: IContext) =>
-      source.subscribedToUser
-        ? context.dataLoaders.userLoader.loadMany(source.subscribedToUser.map(({ subscriberId }) => subscriberId))
-        : null,
+        source.subscribedToUser
+          ? context.dataLoaders.userLoader.loadMany(
+              source.subscribedToUser.map((user) => user.subscriberId),
+            )
+          : null,
     },
   }),
 });
