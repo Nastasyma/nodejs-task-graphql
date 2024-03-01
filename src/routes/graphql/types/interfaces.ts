@@ -46,5 +46,5 @@ export interface IDataLoaders {
   userLoader: DataLoader<string, IUser | undefined, string>;
   postsLoader: DataLoader<string, IPost | undefined, string>;
   // profileLoader: DataLoader<string, IProfile | undefined, string>;
-  // memberTypeLoader: DataLoader<string, IMemberType | undefined, string>;
+  memberTypeLoader: DataLoader<string, IMemberType | undefined, string>;
 }
