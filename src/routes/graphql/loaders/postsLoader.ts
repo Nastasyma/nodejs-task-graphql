@@ -12,6 +12,6 @@ export const postsLoader = (prisma: PrismaClient) => {
       },
     });
 
-    return ids.map((id) => posts.find((post) => post.authorId === id));
+    return ids.map((id) => posts.filter((post) => post.authorId === id));
   });
 }
