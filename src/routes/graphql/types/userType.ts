@@ -20,7 +20,7 @@ export const UserType: GraphQLObjectType<IUser, IContext> = new GraphQLObjectTyp
     posts: {
       type: new GraphQLList(PostType),
       resolve: async (source, _args: unknown, context: IContext) =>
-        await context.prisma.post.findMany({ where: { authorId: source.id } }),
+        await context.dataLoaders.postsLoader.load(source.id),
     },
 
     profile: {
