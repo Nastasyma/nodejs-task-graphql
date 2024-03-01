@@ -32,7 +32,7 @@ export const UserType: GraphQLObjectType<IUser, IContext> = new GraphQLObjectTyp
     userSubscribedTo: {
       type: new GraphQLList(UserType),
       resolve: async (source, _args: unknown, context: IContext) =>
-      source.userSubscribedTo && source.userSubscribedTo.length
+      source.userSubscribedTo
         ? context.dataLoaders.userLoader.loadMany(source.userSubscribedTo.map(({ authorId }) => authorId))
         : null,
     },
@@ -40,7 +40,7 @@ export const UserType: GraphQLObjectType<IUser, IContext> = new GraphQLObjectTyp
     subscribedToUser: {
       type: new GraphQLList(UserType),
       resolve: async (source, _args: unknown, context: IContext) =>
-      source.subscribedToUser && source.subscribedToUser.length
+      source.subscribedToUser
         ? context.dataLoaders.userLoader.loadMany(source.subscribedToUser.map(({ subscriberId }) => subscriberId))
         : null,
     },
